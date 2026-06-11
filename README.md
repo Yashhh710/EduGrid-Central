@@ -1,16 +1,107 @@
-# React + Vite
+# EduGrid Central
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EduGrid Central is a modern React-based e-learning platform designed to provide students with an interactive and organized learning experience. The platform allows users to explore courses, access learning resources, track their progress, and earn certificates through a clean and responsive user interface.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Add your deployed link here:
 
-## React Compiler
+https://your-live-demo-link.vercel.app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+* Modern and responsive user interface
+* Course catalog with detailed course information
+* Interactive learning dashboard
+* Progress tracking system
+* Course completion certificates
+* Student-friendly navigation
+* Mobile, tablet, and desktop responsive design
+* Fast performance powered by React and Vite
+* Clean component-based architecture
+* Easy scalability for future enhancements
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+### Frontend
+
+* React.js
+* JavaScript (ES6+)
+* Vite
+* HTML5
+* CSS3
+
+### Development Tools
+
+* GitHub
+* Vercel
+
+## Project Structure
+
+```text
+src/
+├── components/
+├── pages/
+├── assets/
+├── App.jsx
+├── main.jsx
+└── index.css
+
+public/
+package.json
+vite.config.js
+README.md
+```
+
+## Screenshots
+
+### Home Page
+
+Add screenshot here:
+
+```text
+screenshots/home-page.png
+```
+
+### Dashboard
+
+Add screenshot here:
+
+```text
+screenshots/dashboard.png
+```
+
+### Courses Page
+
+Add screenshot here:
+
+```text
+screenshots/courses-page.png
+```
+
+### Certificates Page
+
+Add screenshot here:
+
+```text
+screenshots/certificates-page.png
+```
+
+## Future Improvements
+
+* User authentication
+* Course enrollment system
+* Video learning integration
+* Online quizzes and assessments
+* AI-powered Quiz
+* dashboard
+* Student profile management
+* Certificate
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome. Feel free to fork the repository and submit pull requests.
+
+## License
+
+This project is created for educational and learning purposes.
