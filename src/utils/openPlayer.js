@@ -28,6 +28,6 @@ export function openPlayer({ v, start, title, desc } = {}) {
   if (start) params.set('start', start);
   if (title) params.set('title', title || '');
   if (desc) params.set('d', desc || '');
-  const url = `src/components/video-page/player.html?${params.toString()}`;
+  const url = `/player.html?${params.toString()}`;
   window.open(url, '_blank');
 }
