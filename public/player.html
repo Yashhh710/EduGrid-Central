@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="https://img.icons8.com/?size=100&id=13445&format=png&color=000000" />
+  <title>Video Player</title>
+  <style>
+    html,body{height:100%;}
+    body{margin:0;font-family:Plus Jakarta Sans,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#000;color:#fff}
+    /* Full-bleed iframe */
+    iframe#player{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;border:0;background:#000}
+    /* Floating header/back button overlay */
+    .header{position:fixed;top:12px;left:12px;right: 170px;z-index:4;padding:8px 10px;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .header-left{display:flex;align-items:center;gap:10px}
+    .title{font-weight:700;color:#fff;font-size:14px;max-width:calc(100vw - 220px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn-close{display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .2s}
+    .btn-close:hover{background:rgba(255,255,255,0.16)}
+    .cc-panel{position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:320px;max-height:calc(100vh - 96px);overflow-y:auto;background:rgba(10,10,10,0.95);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:0;color:#fff;box-shadow:0 24px 80px rgba(0,0,0,0.45);z-index:5;display:none}
+    .cc-panel.show{display:block}
+    .cc-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 0;cursor:grab;}
+    .cc-panel-head:active{cursor:grabbing;}
+    .cc-panel-head h3{font-size:16px;margin:0;color:#fff}
+    .cc-list{list-style:none;margin:0;padding:18px 18px 18px 18px;display:grid;gap:10px}
+    .cc-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background .2s,border-color .2s}
+    .cc-item:hover{background:rgba(255,255,255,0.12)}
+    .cc-item.active{background:rgba(37,99,235,0.25);border-color:rgba(37,99,235,0.45)}
+    .cc-item .cc-time{font-size:11px;color:#a5b4fc;margin-top:6px;display:block}
+    .meta{display:none}
+    .btn-close{display:inline-block;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,0.06);cursor:pointer}
+    .edu-badge{position:fixed;right:18px;bottom:18px;z-index:6;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(15,23,42,0.8);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.14);box-shadow:0 18px 45px rgba(0,0,0,0.25);}
+    .edu-mark{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;color:#fff;font-size:16px;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,0.25);}
+    .edu-text{display:flex;flex-direction:column;line-height:1.05;}
+    .edu-text span{font-size:10px;color:#cbd5e1;text-transform:uppercase;letter-spacing:0.15em;}
+    .edu-text strong{font-size:14px;color:#f8fafc;}
+    /* Hide the lower meta area to avoid any empty space */
+    .meta{display:none}
+  </style>
+</head>
+<body>
+  <div>
+    <div class="header">
+      <div class="header-left">
+        <button id="btn-back" class="btn-close">← Back</button>
+        <div class="title" id="video-title">Video</div>
+      </div>
+    </div>
+    <iframe id="player" src="about:blank" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+    <div id="ccPanel" class="cc-panel" aria-hidden="true">
+      <div class="cc-panel-head" id="ccHandle">
+        <h3>Subtitles</h3>
+        <button id="ccClose" class="btn-close">✕</button>
+      </div>
+      <div class="cc-list" id="ccList">
+        <div class="cc-item" style="cursor:default;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.08);">
+          <div>Native captions are enabled in the video player if available.</div>
+          <span class="cc-time">Move this box by dragging the header.</span>
+        </div>
+      </div>
+    </div>
+    <div class="meta" aria-hidden="true">
+      <div id="video-desc"></div>
+      <div id="captionEditor" style="margin-top:8px;display:none;">
+        <textarea id="captionInput" style="width:100%;min-height:64px;padding:8px;border-radius:8px;border:1px solid #e6e6e6;font-size:14px;">Caption text...</textarea>
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end;"><button id="btnSaveCaption" class="btn-close">Save</button><button id="btnCancelCaption" class="btn-close">Cancel</button></div>
+      </div>
+    </div>
+    <div class="edu-badge">
+      <div class="edu-mark">EG</div>
+      <div class="edu-text"><span>Powered by</span><strong>EduGrid</strong></div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      const v = params.get('v');
+      const start = params.get('start') || params.get('t') || '';
+      const titleParam = params.get('title') || params.get('t') || '';
+      const desc = params.get('d') || '';
+      const player = document.getElementById('player');
+      const title = document.getElementById('video-title');
+      const vdesc = document.getElementById('video-desc');
+      if(v){
+        // use embed URL so it doesn't navigate to youtube.com. include start if provided
+        const startPart = start ? ('&start=' + encodeURIComponent(start)) : '';
+        player.src = 'https://www.youtube.com/embed/' + encodeURIComponent(v) + '?rel=0&autoplay=1&cc_load_policy=1&cc_lang_pref=en' + startPart;
+      } else {
+        player.src = 'about:blank';
+      }
+      if(titleParam) title.textContent = decodeURIComponent(titleParam);
+      if(desc) vdesc.textContent = decodeURIComponent(desc);
+    })();
+  </script>
+  <script>
+    const ccPanel = document.getElementById('ccPanel');
+    const ccClose = document.getElementById('ccClose');
+    const ccHandle = document.getElementById('ccHandle');
+
+    function openCcPanel() {
+      ccPanel.classList.add('show');
+      ccPanel.setAttribute('aria-hidden', 'false');
+    }
+    function closeCcPanel() {
+      ccPanel.classList.remove('show');
+      ccPanel.setAttribute('aria-hidden', 'true');
+    }
+
+    ccClose.addEventListener('click', closeCcPanel);
+
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let panelStartLeft = 0;
+    let panelStartTop = 0;
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      ccPanel.style.left = `${panelStartLeft + dx}px`;
+      ccPanel.style.top = `${panelStartTop + dy}px`;
+      ccPanel.style.right = 'auto';
+    }
+
+    function onPointerUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+    }
+
+    ccHandle.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      const rect = ccPanel.getBoundingClientRect();
+      panelStartLeft = rect.left;
+      panelStartTop = rect.top;
+      ccPanel.style.transform = 'none';
+      ccPanel.style.left = `${panelStartLeft}px`;
+      ccPanel.style.top = `${panelStartTop}px`;
+      ccPanel.style.right = 'auto';
+      document.addEventListener('pointermove', onPointerMove);
+      document.addEventListener('pointerup', onPointerUp);
+      e.preventDefault();
+    });
+  </script>
+  <script>
+    // Close this tab when Back is clicked. Fallback to navigate to home if close is blocked.
+    document.getElementById('btn-back').addEventListener('click', function(e){
+      try{
+        window.close();
+        // If window.close() is blocked, after a short delay navigate back to home
+        setTimeout(function(){ if(!window.closed) window.location.href = 'home.html'; }, 150);
+      }catch(err){
+        window.location.href = 'home.html';
+      }
+    });
+  </script>
+</body>
+</html>
