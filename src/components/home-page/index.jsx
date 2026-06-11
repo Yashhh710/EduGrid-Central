@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './homepage.css';
 
-import Sidebar from './layout/sidebar';
+import Sidebar from './layout/Sidebar';
 import Nav from './layout/nav';
 import RightPanel from './layout/rightPanel';
 
