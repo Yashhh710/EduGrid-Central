@@ -2,12 +2,20 @@ import React from 'react';
 
 function PopularCourses() {
   const courses = [
-    { title: 'Web Development', desc: 'HTML, CSS, JavaScript & modern frameworks', img: 'https://www.cybher.org/wp-content/uploads/2023/08/web-dev.jpg', lvl: 'lv-beg', lvlTxt: 'Beginner', dur: '12h 45m', pillColor: '#3b82f6', pillText: '</>', rating: '4.8 (2.3k)', avatars: [1, 2, 3] },
-    { title: 'Python Programming', desc: 'Master Python from basics to advanced concepts', img: 'https://4kwallpapers.com/images/wallpapers/python-programming-5120x2880-16102.jpg', lvl: 'lv-int', lvlTxt: 'Intermediate', dur: '10h 30m', pillColor: '#f59e0b', pillText: 'Py', rating: '4.7 (1.8k)', avatars: [4, 5, 6] },
-    { title: 'UI/UX Design Masterclass', desc: 'Design stunning user interfaces and prototypes', img: 'https://hedza.com/wp-content/uploads/2023/08/ux-ui-design-scaled.jpg', lvl: 'lv-adv', lvlTxt: 'Advanced', dur: '15h 20m', pillColor: '#ec4899', pillText: 'UI', rating: '4.9 (3.1k)', avatars: [7, 8, 9] },
-    { title: 'Data Science & Analytics', desc: 'Analyze complex statistics and machine data models', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80', lvl: 'lv-int', lvlTxt: 'Intermediate', dur: '18h 15m', pillColor: '#10b981', pillText: 'DS', rating: '4.6 (1.5k)', avatars: [10, 11, 12] },
-    { title: 'Cybersecurity Essentials', desc: 'Protect system parameters and digital assets', img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80', lvl: 'lv-adv', lvlTxt: 'Advanced', dur: '14h 00m', pillColor: '#ef4444', pillText: 'Sec', rating: '4.9 (2.0k)', avatars: [13, 14, 15] }
+    { title: 'Web Development', desc: 'HTML, CSS, JavaScript & modern frameworks', img: 'https://www.cybher.org/wp-content/uploads/2023/08/web-dev.jpg', lvl: 'lv-beg', lvlTxt: 'Beginner', dur: '12h 45m', pillColor: '#3b82f6', pillText: '</>', rating: '4.8 (2.3k)', avatars: [1, 2, 3], videoId: 'nu_pCVPKzTk', videoTitle: 'Full Stack Web Development for Beginners', videoDesc: 'Master HTML, CSS, JavaScript, and Node.js from scratch.' },
+    { title: 'Python Programming', desc: 'Master Python from basics to advanced concepts', img: 'https://4kwallpapers.com/images/wallpapers/python-programming-5120x2880-16102.jpg', lvl: 'lv-int', lvlTxt: 'Intermediate', dur: '10h 30m', pillColor: '#f59e0b', pillText: 'Py', rating: '4.7 (1.8k)', avatars: [4, 5, 6], videoId: '_uQrJ0TkZlc', videoTitle: 'Python Full Course for Beginners', videoDesc: 'Go from absolute zero to building your first Python applications.' },
+    { title: 'UI/UX Design Masterclass', desc: 'Design stunning user interfaces and prototypes', img: 'https://hedza.com/wp-content/uploads/2023/08/ux-ui-design-scaled.jpg', lvl: 'lv-adv', lvlTxt: 'Advanced', dur: '15h 20m', pillColor: '#ec4899', pillText: 'UI', rating: '4.9 (3.1k)', avatars: [7, 8, 9], videoId: 'c9Wg6Cb_YlU', videoTitle: 'UI/UX Design Mastery', videoDesc: 'Understand the fundamentals of user research and wireframing.' },
+    { title: 'Data Science & Analytics', desc: 'Analyze complex statistics and machine data models', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80', lvl: 'lv-int', lvlTxt: 'Intermediate', dur: '18h 15m', pillColor: '#10b981', pillText: 'DS', rating: '4.6 (1.5k)', avatars: [10, 11, 12], videoId: '8hly31xKli0', videoTitle: 'Data Structures & Algorithms', videoDesc: 'Optimize custom backend processes for performance and technical interviews.' },
+    { title: 'Video Editing Masterclass', desc: 'Cut compelling video projects using timeline best practices', img: 'https://images.unsplash.com/photo-1536240478700-b869ad10e1e5?auto=format&fit=crop&w=600&q=80', lvl: 'lv-adv', lvlTxt: 'Advanced', dur: '14h 00m', pillColor: '#ef4444', pillText: 'VE', rating: '4.9 (2.0k)', avatars: [13, 14, 15], videoId: '8eDsvKwM40U', videoTitle: 'Video Editing Masterclass', videoDesc: 'Cut compelling video projects using timeline best practices.' },
   ];
+
+  const openVideo = (c) => {
+    const params = new URLSearchParams();
+    params.set('v', c.videoId);
+    params.set('title', c.videoTitle);
+    params.set('d', c.videoDesc);
+    window.open(`/player.html?${params.toString()}`, '_blank');
+  };
 
   return (
     <section id="courses" className="courses-section container reveal">
@@ -21,7 +29,7 @@ function PopularCourses() {
 
       <div className="courses-grid">
         {courses.map((c, i) => (
-          <div className="course-card" key={i}>
+          <div className="course-card" key={i} onClick={() => openVideo(c)} style={{ cursor: 'pointer' }}>
             <div className="cc-thumb" style={{ background: 'linear-gradient(135deg,#0f172a,#1e1b4b)' }}>
               <img src={c.img} alt={c.title} />
               <div className={`cc-level ${c.lvl}`}>{c.lvlTxt}</div>
