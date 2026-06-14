@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LandingHome from './pages/Home.jsx';
 import HomeMaster from './components/home-page/index.jsx';
 import LoginMaster from './components/login-page/index.jsx';
+import LoadingScreen from './components/LoadingScreen.jsx';
 
 function App() {
+  const [ready, setReady] = useState(false);
+
   const openLogin = () => {
     window.location.hash = '#/login';
   };
@@ -22,14 +25,20 @@ function App() {
   };
 
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<LandingHome onOpenLogin={openLogin} />} />
-        <Route path="/login" element={<LoginMaster onBack={openLanding} onNavigateHome={openDashboard} />} />
-        <Route path="/dashboard/*" element={<HomeMaster />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </HashRouter>
+    <>
+      <LoadingScreen duration={2500} onDone={() => setReady(true)} />
+
+      {ready && (
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<LandingHome onOpenLogin={openLogin} />} />
+            <Route path="/login" element={<LoginMaster onBack={openLanding} onNavigateHome={openDashboard} />} />
+            <Route path="/dashboard/*" element={<HomeMaster />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </HashRouter>
+      )}
+    </>
   );
 }
 
