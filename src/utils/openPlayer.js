@@ -21,13 +21,15 @@ function extractYouTubeId(input) {
   return input;
 }
 
-export function openPlayer({ v, start, title, desc } = {}) {
+export function openPlayer({ v, start, title, desc, duration, progress } = {}) {
   const vid = extractYouTubeId(v);
   const params = new URLSearchParams();
   if (vid) params.set('v', vid);
   if (start) params.set('start', start);
   if (title) params.set('title', title || '');
   if (desc) params.set('d', desc || '');
+  if (duration) params.set('duration', duration);
+  if (progress !== undefined && progress !== null) params.set('progress', progress);
   const url = `/player.html?${params.toString()}`;
   window.open(url, '_blank');
 }
