@@ -11,7 +11,8 @@ const styles = `
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .edugrid-loading-overlay.hidden {
@@ -26,6 +27,13 @@ const styles = `
     align-items: center;
     justify-content: center;
     gap: 16px;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .edugrid-loading-overlay.hidden .edugrid-loading-wrapper {
+    transform: scale(1.15);
+    opacity: 0;
   }
 
   .edugrid-svg {
@@ -197,6 +205,15 @@ const styles = `
     100% { filter: blur(5px); opacity: 0.2; }
   }
 
+  /* Main app page-in animation */
+  @keyframes eg-pageIn {
+    0%   { opacity: 0; transform: translateY(24px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .edugrid-app-enter {
+    animation: eg-pageIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     #eg-capTop, #eg-capLeft, #eg-capRight, #eg-capFront,
     #eg-capBackLeft, #eg-capBackRight, #eg-brimLeft, #eg-brimRight,
@@ -206,25 +223,23 @@ const styles = `
     .edugrid-loading-text span {
       animation: none;
     }
+    .edugrid-loading-wrapper {
+      transition: none;
+    }
+    .edugrid-app-enter {
+      animation: none;
+    }
   }
 `;
 
-/**
- * EduGrid Loading Screen
- *
- * Props:
- *   duration  (number, ms)  – how long to show the loader before auto-hiding. Default 2500.
- *   onDone    (function)    – called once the loader hides (after fade-out).
- *
- * Usage in App.jsx:
- *   <LoadingScreen duration={2500} onDone={() => setReady(true)} />
- */
 export default function LoadingScreen({ duration = 2500, onDone }) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const hideTimer = setTimeout(() => setHidden(true), duration);
-    const doneTimer = setTimeout(() => onDone?.(), duration + 500); // after fade-out
+    // onDone fires at the midpoint of the fade (300ms in) so the app
+    // starts mounting while the loader is still fading — overlap = seamless.
+    const doneTimer = setTimeout(() => onDone?.(), duration + 300);
     return () => {
       clearTimeout(hideTimer);
       clearTimeout(doneTimer);
