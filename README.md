@@ -2,11 +2,10 @@
 
 EduGrid Central is a modern React-based e-learning platform designed to provide students with an interactive and organized learning experience. The platform allows users to explore courses, access learning resources, track their progress, and earn certificates through a clean and responsive user interface.
 
-## Live Demo
+## Links
 
-Add your deployed link here:
-
-https://edu-grid-co.vercel.app/
+🌐 **Live Demo:** [Visit EduGrid Central](https://edu-grid-co.vercel.app/)  
+📄 **Project Report:** [View PDF Report](https://github.com/Yashhh710/EduGrid-Central/blob/main/Documents/EduGrid_Central_Report%20.pdf)
 
 ## Features
 
