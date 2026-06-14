@@ -36,6 +36,12 @@ export default function HomeMaster() {
 
   useEffect(() => {
     try {
+      const savedName = localStorage.getItem('edu_name') || '';
+      if (savedName) setUserName(savedName);
+    } catch (e) {
+      // ignore
+    }
+    try {
       const savedProgress = JSON.parse(localStorage.getItem('edu_course_progress') || '{}');
       setCourseProgress(savedProgress);
     } catch (e) {
